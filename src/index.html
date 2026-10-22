@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nocturne</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="aurora" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="titlebar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <defs>
+          <linearGradient id="bm" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="var(--a1)" />
+            <stop offset="1" stop-color="var(--a2)" />
+          </linearGradient>
+        </defs>
+        <path d="M15.5 3.2A9 9 0 1 0 20.8 15 7.2 7.2 0 0 1 15.5 3.2Z" fill="url(#bm)" />
+      </svg>
+      <span>Nocturne</span>
+    </div>
+    <button class="icon-btn settings-btn" id="openSettings" title="Settings  (,)" aria-label="Settings">
+      <svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+    </button>
+  </header>
+
+  <main class="layout">
+    <!-- ───────────── Timer ───────────── -->
+    <section class="stage">
+      <div class="modes" role="tablist" id="modes">
+        <span class="mode-pill" id="modePill"></span>
+        <button role="tab" data-mode="focus" class="mode active">Focus</button>
+        <button role="tab" data-mode="short" class="mode">Short break</button>
+        <button role="tab" data-mode="long" class="mode">Long break</button>
+      </div>
+
+      <div class="dial" id="dial">
+        <svg class="ring" viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--a1)" />
+              <stop offset="1" stop-color="var(--a2)" />
+            </linearGradient>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="8" result="b" />
+              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+          <g id="ticks"></g>
+          <circle class="track" cx="200" cy="200" r="168" />
+          <circle class="progress" id="progress" cx="200" cy="200" r="168" filter="url(#glow)" />
+          <circle class="knob" id="knob" cx="200" cy="32" r="7" />
+        </svg>
+        <div class="readout">
+          <div class="mode-label" id="modeLabel">Focus</div>
+          <div class="time" id="time">25:00</div>
+          <button class="current-task" id="currentTask" title="Pick a task from the list">
+            <span class="dot"></span><span id="currentTaskText">No task selected</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="icon-btn round" id="resetBtn" title="Reset  (R)" aria-label="Reset">
+          <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+        </button>
+        <button class="play" id="playBtn" title="Start / Pause  (Space)" aria-label="Start">
+          <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.4-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5Z"/></svg>
+          <svg class="i-pause" viewBox="0 0 24 24"><rect x="6.5" y="5" width="4" height="14" rx="1.4"/><rect x="13.5" y="5" width="4" height="14" rx="1.4"/></svg>
+        </button>
+        <button class="icon-btn round" id="skipBtn" title="Skip  (S)" aria-label="Skip">
+          <svg viewBox="0 0 24 24"><path d="M5 5.5v13l9-6.5-9-6.5Z"/><path d="M18 5v14"/></svg>
+        </button>
+      </div>
+
+      <div class="cycle" id="cycle" title="Sessions until long break"></div>
+    </section>
+
+    <!-- ───────────── Side panel ───────────── -->
+    <aside class="panel">
+      <div class="tabs" role="tablist">
+        <span class="tab-pill" id="tabPill"></span>
+        <button class="tab active" data-tab="tasks" role="tab">Tasks</button>
+        <button class="tab" data-tab="stats" role="tab">Insights</button>
+      </div>
+
+      <div class="tab-view active" data-view="tasks">
+        <form class="add-task" id="addTask" autocomplete="off">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          <input id="taskInput" placeholder="What are you working on?" maxlength="120" />
+          <kbd>↵</kbd>
+        </form>
+        <ul class="tasks" id="tasks"></ul>
+        <div class="empty" id="tasksEmpty">
+          <div class="empty-orb"></div>
+          <p>Your list is clear.</p>
+          <span>Add a task, pick it, and hit play.</span>
+        </div>
+        <button class="clear-done" id="clearDone">Clear completed</button>
+      </div>
+
+      <div class="tab-view" data-view="stats">
+        <div class="kpis">
+          <div class="kpi"><span class="kpi-v" id="kToday">0m</span><span class="kpi-l">Focused today</span></div>
+          <div class="kpi"><span class="kpi-v" id="kSessions">0</span><span class="kpi-l">Sessions today</span></div>
+          <div class="kpi"><span class="kpi-v" id="kStreak">0</span><span class="kpi-l">Day streak</span></div>
+          <div class="kpi"><span class="kpi-v" id="kTotal">0h</span><span class="kpi-l">All time</span></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-head"><span>Last 7 days</span><span id="weekTotal" class="muted">0m</span></div>
+          <div class="chart" id="chart"></div>
+        </div>
+        <p class="quote" id="quote"></p>
+      </div>
+    </aside>
+  </main>
+
+  <!-- ───────────── Settings ───────────── -->
+  <div class="sheet-backdrop" id="sheet" aria-hidden="true">
+    <div class="sheet" role="dialog" aria-label="Settings">
+      <div class="sheet-head">
+        <h2>Settings</h2>
+        <button class="icon-btn" id="closeSettings" aria-label="Close">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+
+      <div class="group">
+        <h3>Durations</h3>
+        <label class="slider-row"><span>Focus</span><input type="range" min="5" max="90" step="5" data-setting="focus" /><output></output></label>
+        <label class="slider-row"><span>Short break</span><input type="range" min="1" max="30" step="1" data-setting="short" /><output></output></label>
+        <label class="slider-row"><span>Long break</span><input type="range" min="5" max="60" step="5" data-setting="long" /><output></output></label>
+        <label class="slider-row"><span>Long break every</span><input type="range" min="2" max="8" step="1" data-setting="interval" /><output></output></label>
+      </div>
+
+      <div class="group">
+        <h3>Behaviour</h3>
+        <label class="toggle-row"><span>Auto-start breaks</span><input type="checkbox" data-setting="autoBreaks" /><i></i></label>
+        <label class="toggle-row"><span>Auto-start focus</span><input type="checkbox" data-setting="autoFocus" /><i></i></label>
+        <label class="toggle-row"><span>Chime when a session ends</span><input type="checkbox" data-setting="sound" /><i></i></label>
+        <label class="toggle-row"><span>Desktop notifications</span><input type="checkbox" data-setting="notify" /><i></i></label>
+        <label class="toggle-row"><span>Ambient motion</span><input type="checkbox" data-setting="motion" /><i></i></label>
+      </div>
+
+      <div class="shortcuts">
+        <span><kbd>Space</kbd> start / pause</span>
+        <span><kbd>R</kbd> reset</span>
+        <span><kbd>S</kbd> skip</span>
+        <span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> modes</span>
+        <span><kbd>N</kbd> new task</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
