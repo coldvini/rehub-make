@@ -42,7 +42,10 @@ function createWindow() {
   });
 
   win.loadFile(path.join(__dirname, 'src', 'index.html'));
-  win.once('ready-to-show', () => win.show());
+  win.once('ready-to-show', () => {
+    mainReady = true;
+    if (!splash) win.show();
+  });
   win.on('closed', () => { win = null; });
 
   win.webContents.setWindowOpenHandler(({ url }) => {
@@ -52,10 +55,46 @@ function createWindow() {
 }
 
 function showMain() {
+  if (splash) return;
   if (!win) return createWindow();
   if (win.isMinimized()) win.restore();
   win.show();
   win.focus();
+}
+
+/* ───────── Splash ───────── */
+
+const SPLASH_MS = 5600;
+let splash = null;
+let mainReady = false;
+
+// A rounded, see-through loading card that plays while the main window
+// loads behind it, then hands over.
+function showSplash() {
+  splash = new BrowserWindow({
+    width: 600,
+    height: 420,
+    frame: false,
+    transparent: true,
+    backgroundColor: '#00000000',
+    resizable: false,
+    maximizable: false,
+    fullscreenable: false,
+    hasShadow: false,
+    show: false,
+    center: true,
+    title: 'Lumen',
+    icon: ICON,
+    webPreferences: { contextIsolation: true, nodeIntegration: false },
+  });
+  splash.loadFile(path.join(__dirname, 'src', 'splash.html'), { query: { ms: String(SPLASH_MS) } });
+  splash.once('ready-to-show', () => splash && splash.show());
+  splash.on('closed', () => { splash = null; });
+
+  setTimeout(() => {
+    if (win && mainReady) win.show();
+    if (splash) splash.destroy();
+  }, SPLASH_MS);
 }
 
 /* ───────── Helpers ───────── */
@@ -400,7 +439,10 @@ if (!app.requestSingleInstanceLock()) {
     if (live.active && live.config) {
       startLive(live.config).catch(() => { live.active = false; saveLive(); });
     }
-    if (!startHidden || !live.active) createWindow();
+    if (!startHidden || !live.active) {
+      showSplash();
+      createWindow();
+    }
     app.on('activate', showMain);
   });
 }

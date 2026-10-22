@@ -13,6 +13,9 @@ Press Space to create one-of-a-kind generative art, tweak it, and set it as your
 - **macOS:** the app isn't notarized by Apple, so the first time, right-click **Lumen.app → Open → Open**. On macOS 15+, go to **System Settings → Privacy & Security** and click **Open Anyway**. When you first set a wallpaper, allow Lumen to control **System Events**.
 - **Windows:** if SmartScreen appears, click **More info → Run anyway**.
 
+### New in 1.2
+- A brand-new loading screen: a floating, rounded glass card with live colour, a glowing logo and an animated progress bar
+
 ### New in 1.1
 - **Mix tab:** stir colours together like real paint (blue + yellow = green) or like light, or drop in a photo and Lumen mixes its colours for you
 - **Video wallpapers:** upload any MP4, MOV or WebM and set it as a looping live wallpaper behind your desktop icons

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;" />
+  <title>Lumen</title>
+  <link rel="stylesheet" href="splash.css" />
+</head>
+<body>
+  <div class="card" id="card">
+    <canvas class="art" id="art" width="300" height="200"></canvas>
+    <div class="veil"></div>
+    <div class="grain"></div>
+    <div class="sheen"></div>
+
+    <div class="center">
+      <div class="logo">
+        <svg class="orbit" viewBox="0 0 120 120" aria-hidden="true">
+          <defs>
+            <linearGradient id="og" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#7b2ff7" />
+              <stop offset="0.5" stop-color="#ff2e88" />
+              <stop offset="1" stop-color="#00f0ff" />
+            </linearGradient>
+          </defs>
+          <circle class="orbit-track" cx="60" cy="60" r="54" />
+          <circle class="orbit-arc" cx="60" cy="60" r="54" />
+          <circle class="orbit-dot" cx="60" cy="6" r="3.2" />
+        </svg>
+        <div class="logo-glow"></div>
+        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="m1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7b2ff7" /><stop offset="1" stop-color="#00f0ff" /></linearGradient>
+            <linearGradient id="m2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff2e88" /><stop offset="1" stop-color="#ff8a00" /></linearGradient>
+            <linearGradient id="m3" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4f46e5" /><stop offset="1" stop-color="#c026d3" /></linearGradient>
+            <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffe3f4" /><stop offset="0.4" stop-color="#ff5fb4" stop-opacity="0.85" /><stop offset="1" stop-color="#7c3aed" stop-opacity="0" /></radialGradient>
+            <clipPath id="sq"><rect x="0" y="0" width="64" height="64" rx="15" /></clipPath>
+          </defs>
+          <g clip-path="url(#sq)">
+            <rect width="64" height="64" fill="#0d0b14" />
+            <circle class="sun" cx="38" cy="22" r="17" fill="url(#sun)" />
+            <path class="w w1" d="M-8 36 C 6 29, 16 42, 30 35 S 54 29, 72 34 V 64 H -8 Z" fill="url(#m1)" />
+            <path class="w w2" d="M-8 43 C 6 38, 18 48, 32 42 S 54 38, 72 43 V 64 H -8 Z" fill="url(#m2)" />
+            <path class="w w3" d="M-8 50 C 8 46, 20 55, 36 50 S 56 47, 72 51 V 64 H -8 Z" fill="url(#m3)" />
+          </g>
+          <rect x="0.5" y="0.5" width="63" height="63" rx="14.5" fill="none" stroke="rgba(255,255,255,0.14)" />
+        </svg>
+      </div>
+
+      <h1 class="word">Lumen</h1>
+      <p class="tag">Generative wallpaper studio</p>
+    </div>
+
+    <div class="footer">
+      <div class="status">
+        <span class="status-text" id="status">Waking up</span>
+        <span class="pct" id="pct">0%</span>
+      </div>
+      <div class="track">
+        <div class="fill" id="fill"><span class="head"></span></div>
+      </div>
+      <div class="dots" id="dots"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+
+  <script src="generators.js"></script>
+  <script src="splash.js"></script>
+</body>
+</html>

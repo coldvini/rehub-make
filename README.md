@@ -29,6 +29,14 @@ Hit **Space** and Lumen creates a brand-new piece of generative art that nobody 
 - **Gallery:** heart the ones you love. Each saved piece is stored as a tiny recipe (style, seed and colours), so it re-renders perfectly at any size.
 - **Seeds:** every artwork has a seed like `#5B64E8`, so you can share or recreate it.
 
+## Loading screen
+
+Lumen opens with a floating, rounded loading card: live colour moving behind glass, a spinning glow around the logo, and a gradient progress bar.
+
+<p align="center">
+  <img src="docs/splash.jpg" alt="Lumen loading screen" />
+</p>
+
 ## Mix colours
 
 The **Mix** tab is a paint bowl. Add colours and choose how many parts of each, and Lumen stirs them together:
