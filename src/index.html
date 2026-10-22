@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:;" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; media-src 'self' blob: file:;" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lumen</title>
   <link rel="stylesheet" href="styles.css" />
@@ -15,6 +15,19 @@
       <span class="brand-mark"></span>
       <span>Lumen</span>
     </div>
+    <nav class="views" id="viewTabs" role="tablist">
+      <span class="views-pill" id="viewsPill"></span>
+      <button class="view-tab active" data-view="create" role="tab">
+        <svg viewBox="0 0 24 24"><path d="M12 3.5 14 9l5.5 2-5.5 2-2 5.5-2-5.5-5.5-2L10 9z"/></svg>Create
+      </button>
+      <button class="view-tab" data-view="mix" role="tab">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="10" r="5.5"/><circle cx="15" cy="10" r="5.5"/><circle cx="12" cy="15" r="5.5"/></svg>Mix
+      </button>
+      <button class="view-tab" data-view="video" role="tab">
+        <svg viewBox="0 0 24 24"><rect x="3" y="5.5" width="13" height="13" rx="3"/><path d="m16 10.5 5-3v9l-5-3"/></svg>Video
+        <span class="live-dot" id="liveDot" title="A live wallpaper is running"></span>
+      </button>
+    </nav>
     <div class="title-actions">
       <button class="ghost-btn" id="openGallery" title="Gallery  (G)">
         <svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>
@@ -24,7 +37,7 @@
     </div>
   </header>
 
-  <main class="layout">
+  <main class="layout view active" id="view-create">
     <!-- ───────────── Canvas stage ───────────── -->
     <section class="stage" id="stage">
       <div class="frame-wrap" id="frameWrap">
@@ -54,6 +67,9 @@
         </button>
         <button class="round-btn" id="favBtn" title="Save to gallery  (F)">
           <svg viewBox="0 0 24 24"><path d="M12 20.3s-7.5-4.6-7.5-10.1A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.8c0 5.5-7.5 10.1-7.5 10.1Z"/></svg>
+        </button>
+        <button class="round-btn" id="liveArtBtn" title="Set as live (moving) wallpaper  (L)">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="12.5" rx="2.5"/><path d="M8.5 20.5h7M12 17v3.5"/><path d="M10.2 8.2v4.6l4-2.3z" class="fill"/></svg>
         </button>
         <button class="round-btn" id="exportBtn" title="Export PNG  (Ctrl/⌘ S)">
           <svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/></svg>
@@ -105,6 +121,130 @@
     </aside>
   </main>
 
+
+  <!-- ═════════════ Mix ═════════════ -->
+  <main class="layout view" id="view-mix">
+    <section class="stage mix-stage">
+      <div class="bowl-wrap">
+        <div class="bowl-glow" id="bowlGlow"></div>
+        <canvas id="bowl" width="760" height="760"></canvas>
+      </div>
+      <div class="mix-readout">
+        <span class="mix-name" id="mixName">Vivid Green</span>
+        <button class="mix-hex" id="mixHex" title="Copy colour">#00FF00</button>
+      </div>
+      <div class="result">
+        <div class="result-strip" id="resultStrip"></div>
+        <div class="mix-actions">
+          <button class="pill-btn" id="stirBtn" title="Stir again">
+            <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v4.5h-4.5"/></svg>
+            <span>Stir</span>
+          </button>
+          <button class="primary-btn" id="useMix">
+            <svg viewBox="0 0 24 24"><path d="M12 3.5 14 9l5.5 2-5.5 2-2 5.5-2-5.5-5.5-2L10 9z"/></svg>
+            <span>Make art with these colours</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="section">
+        <div class="section-head"><h3>Mix like</h3></div>
+        <div class="seg" id="mixMode">
+          <span class="seg-pill"></span>
+          <button data-mode="paint" class="active">Paint</button>
+          <button data-mode="light">Light</button>
+        </div>
+        <p class="note" id="modeNote">Real paint rules: blue + yellow makes green.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><h3>Your colours</h3><span class="hint" id="ingCount">2 / 8</span></div>
+        <ul class="ingredients" id="ingredients"></ul>
+        <div class="paints" id="paints"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><h3>Mix a photo</h3></div>
+        <label class="photo-drop" id="photoDrop">
+          <input type="file" accept="image/*" id="photoInput" />
+          <img id="photoThumb" alt="" />
+          <span class="photo-copy">
+            <svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="m4 17 5-4.5 3.5 3 3-2.5 4.5 4"/></svg>
+            <b id="photoTitle">Drop a photo</b>
+            <span id="photoSub">Lumen looks at it and pulls out its colours</span>
+          </span>
+        </label>
+      </div>
+    </aside>
+  </main>
+
+  <!-- ═════════════ Video ═════════════ -->
+  <main class="layout view" id="view-video">
+    <section class="stage" id="videoStage">
+      <div class="frame-wrap">
+        <div class="frame-glow" aria-hidden="true"></div>
+        <div class="frame video-frame" id="videoFrame">
+          <video id="videoPreview" muted loop playsinline></video>
+          <label class="dropzone" id="videoDrop">
+            <span class="drop-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 15.5V4M7.5 8.5 12 4l4.5 4.5"/><path d="M4 14.5v2A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-2"/></svg>
+            </span>
+            <b>Drop a video here</b>
+            <span>MP4, MOV or WebM · or click to choose</span>
+          </label>
+          <div class="live-badge" id="liveBadge"><i></i>Live on your desktop</div>
+          <div class="drag-hint">Drop to add</div>
+        </div>
+      </div>
+
+      <div class="actionbar">
+        <button class="pill-btn" id="uploadVideo">
+          <svg viewBox="0 0 24 24"><path d="M12 15.5V4M7.5 8.5 12 4l4.5 4.5"/><path d="M4 14.5v2A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-2"/></svg>
+          <span>Upload video</span>
+        </button>
+        <button class="round-btn" id="stopLive" title="Stop live wallpaper">
+          <svg viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="2.5" class="fill"/></svg>
+        </button>
+        <button class="primary-btn" id="setVideoWall">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="12.5" rx="2.5"/><path d="M8.5 20.5h7M12 17v3.5"/><path d="M10.2 8.2v4.6l4-2.3z" class="fill"/></svg>
+          <span>Set as video wallpaper</span>
+        </button>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="section">
+        <div class="status-card" id="statusCard">
+          <span class="status-dot"></span>
+          <div>
+            <b id="statusTitle">Live wallpaper is off</b>
+            <span id="statusSub">Pick a video and set it as your wallpaper</span>
+          </div>
+        </div>
+        <label class="toggle-row"><span>Start Lumen with my computer</span><input type="checkbox" id="loginToggle" /><i></i></label>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><h3>Your videos</h3><span class="hint" id="videoCount">0</span></div>
+        <div class="video-list" id="videoList"></div>
+        <p class="note" id="videoEmpty">Videos you upload show up here.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><h3>Playback</h3></div>
+        <div class="seg" id="fitMode">
+          <span class="seg-pill"></span>
+          <button data-fit="cover" class="active">Fill screen</button>
+          <button data-fit="contain">Fit whole video</button>
+        </div>
+        <label class="slider"><span>Speed</span><input type="range" min="0.25" max="2" step="0.25" id="speedInput" /><output id="speedOut">1×</output></label>
+        <p class="note">Videos play silently behind your desktop icons. While one is on, Lumen keeps running in your menu bar or system tray.</p>
+      </div>
+    </aside>
+  </main>
+
   <!-- ───────────── Gallery ───────────── -->
   <div class="sheet-backdrop" id="gallery" aria-hidden="true">
     <div class="sheet" role="dialog" aria-label="Gallery">
@@ -129,6 +269,9 @@
   <div class="toast" id="toast"><span class="toast-dot"></span><span id="toastText"></span></div>
 
   <script src="generators.js"></script>
+  <script src="mixer.js"></script>
   <script src="app.js"></script>
+  <script src="mix.js"></script>
+  <script src="video.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 {
   "name": "lumen",
   "productName": "Lumen",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Generate stunning, one-of-a-kind wallpapers and set them in one click. For macOS and Windows.",
   "main": "main.js",
   "author": "Vishantuwuw",
@@ -27,7 +27,9 @@
     "files": [
       "main.js",
       "preload.js",
+      "wallpaper-preload.js",
       "src/**/*",
+      "build/icon.png",
       "package.json"
     ],
     "afterPack": "build/afterPack.js",

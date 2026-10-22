@@ -5,7 +5,7 @@
 <h1 align="center">Lumen</h1>
 
 <p align="center">
-  Make stunning, one-of-a-kind wallpapers, then set them in one click.<br/>
+  Make stunning, one-of-a-kind wallpapers, mix your own colours, and turn any video into a live wallpaper.<br/>
   For <b>macOS</b> and <b>Windows</b>.
 </p>
 
@@ -29,6 +29,32 @@ Hit **Space** and Lumen creates a brand-new piece of generative art that nobody 
 - **Gallery:** heart the ones you love. Each saved piece is stored as a tiny recipe (style, seed and colours), so it re-renders perfectly at any size.
 - **Seeds:** every artwork has a seed like `#5B64E8`, so you can share or recreate it.
 
+## Mix colours
+
+The **Mix** tab is a paint bowl. Add colours and choose how many parts of each, and Lumen stirs them together:
+
+- **Paint mode** mixes like real paint (blue + yellow = green, red + yellow = orange, red + white = pink).
+- **Light mode** blends like overlapping glowing lights.
+- **Mix a photo:** drop in any picture and Lumen looks at it, pulls out its main colours in the right amounts, and mixes them.
+- Every mix becomes a 5-colour palette. Hit **Make art with these colours** to use it.
+
+<p align="center">
+  <img src="docs/mix.jpg" alt="Mixing blue and yellow into green" />
+</p>
+
+## Video wallpapers
+
+The **Video** tab turns any video into your desktop wallpaper. Upload or drag in an MP4, MOV or WebM and click **Set as video wallpaper**. It plays silently and loops behind your desktop icons.
+You can also make your generated art move on your desktop with the **Live** button in Create.
+
+- **Fill screen** or **Fit whole video**, plus a playback-speed slider.
+- Lumen keeps running in the menu bar or system tray while a live wallpaper is on. From there you can pause it, stop it or quit.
+- Switch on **Start Lumen with my computer** to bring your video wallpaper back after a restart.
+
+<p align="center">
+  <img src="docs/video.jpg" alt="A video set as the live wallpaper" />
+</p>
+
 <p align="center">
   <img src="docs/waves.jpg" width="49%" alt="Waves style" />
   <img src="docs/nebula.jpg" width="49%" alt="Nebula style" />
@@ -48,6 +74,7 @@ Hit **Space** and Lumen creates a brand-new piece of generative art that nobody 
 | `F` | Save to gallery |
 | `G` | Open gallery |
 | `W` | Set as wallpaper |
+| `L` | Set as live (moving) wallpaper |
 | `Ctrl/⌘ S` | Export PNG |
 
 ## Download
@@ -68,6 +95,8 @@ The first time you set a wallpaper, macOS asks whether Lumen may control System 
 **First launch on Windows:** if SmartScreen shows a warning, click **More info → Run anyway**.
 
 Wallpapers you set are also saved in `Pictures/Lumen`.
+
+**About video wallpapers:** macOS and Windows have no built-in video wallpaper, so Lumen plays the video in a window placed underneath your desktop icons (the same approach dedicated live-wallpaper apps use). It covers your main display.
 
 ## Run from source
 

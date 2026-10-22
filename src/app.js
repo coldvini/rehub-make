@@ -85,22 +85,50 @@ const ambientCtx = el.ambient.getContext('2d');
 
 /* ───────── Frame sizing ───────── */
 
-function layoutFrame() {
-  const rect = el.stage.getBoundingClientRect();
+// Fit a frame to the space above its action bar, keeping the screen's aspect ratio.
+function fitFrame(stage, frame, actionbar) {
+  const rect = stage.getBoundingClientRect();
   const availW = rect.width - 8;
-  const availH = rect.height - el.actionbar.offsetHeight - 22 - 8;
+  const availH = rect.height - actionbar.offsetHeight - 22 - 8;
   const aspect = state.screen.width / state.screen.height;
   let w = availW, h = w / aspect;
   if (h > availH) { h = availH; w = h * aspect; }
   w = Math.max(200, Math.floor(w));
   h = Math.max(120, Math.floor(h));
-  el.frame.style.width = w + 'px';
-  el.frame.style.height = h + 'px';
+  frame.style.width = w + 'px';
+  frame.style.height = h + 'px';
+  return { w, h };
+}
+
+function layoutFrame() {
+  if (currentView !== 'create') return;
+  const { w, h } = fitFrame(el.stage, el.frame, el.actionbar);
   const dpr = Math.min(devicePixelRatio || 1, 2);
   el.art.width = Math.round(w * dpr);
   el.art.height = Math.round(h * dpr);
   el.metaRes.textContent = `${state.screen.width} × ${state.screen.height}`;
   state.dirty = true;
+}
+
+/* ───────── Views ───────── */
+
+let currentView = 'create';
+const viewTabs = $$('.view-tab');
+
+function setView(name) {
+  currentView = name;
+  viewTabs.forEach((t) => t.classList.toggle('active', t.dataset.view === name));
+  $$('.view').forEach((v) => v.classList.toggle('active', v.id === 'view-' + name));
+  movePill($('#viewsPill'), $('.view-tab.active'));
+  if (name === 'create') { layoutFrame(); renderThumbs(); }
+  document.dispatchEvent(new CustomEvent('viewchange', { detail: name }));
+}
+viewTabs.forEach((t) => t.addEventListener('click', () => setView(t.dataset.view)));
+
+function movePill(pill, target) {
+  if (!pill || !target) return;
+  pill.style.width = target.offsetWidth + 'px';
+  pill.style.transform = `translateX(${target.offsetLeft - 4}px)`;
 }
 
 /* ───────── Render loop ───────── */
@@ -116,6 +144,7 @@ let last = performance.now();
 function frame(now) {
   const dt = Math.min(64, now - last);
   last = now;
+  if (currentView !== 'create') return requestAnimationFrame(frame);
   if (isLive() && !document.hidden) {
     state.t += dt / 1000;
     state.dirty = true;
@@ -214,7 +243,8 @@ function buildSwatches() {
 }
 
 function applyAccent() {
-  const [a1, a2] = state.params.palette.colors;
+  // Accent the UI with the palette's two brightest colours so buttons stay vivid.
+  const [a1, a2] = [...state.params.palette.colors].sort((x, y) => Lumen.luminance(y) - Lumen.luminance(x));
   el.root.style.setProperty('--a1', a1);
   el.root.style.setProperty('--a2', a2);
   const lum = (Lumen.luminance(a1) + Lumen.luminance(a2)) / 2;
@@ -262,6 +292,7 @@ function syncUI() {
   el.animateBtn.disabled = !animatable;
   el.animateBtn.setAttribute('aria-pressed', String(state.animate && animatable));
   el.animateBtn.title = animatable ? 'Live motion  (A)' : 'This style is still-only';
+  $('#liveArtBtn').disabled = !animatable;
   renderThumbs();
   syncFav();
 }
@@ -344,7 +375,27 @@ async function setWallpaper() {
   }
 }
 
+async function setLiveArt() {
+  if (!bridge) return toast('Live wallpapers work in the desktop app', true);
+  if (!Lumen.STYLES[state.params.style].animated) return;
+  try {
+    await bridge.liveStart({ kind: 'art', params: clone(state.params), t: state.t, name: Lumen.STYLES[state.params.style].label });
+    flash();
+    toast('Your art is now moving on your desktop ✦');
+  } catch (err) {
+    console.error(err);
+    toast(liveError(err), true);
+  }
+}
+
+function liveError(err) {
+  const msg = String((err && err.message) || err);
+  if (/macOS and Windows/.test(msg)) return 'Live wallpapers work on macOS and Windows';
+  return 'Could not start the live wallpaper';
+}
+
 el.shuffleBtn.addEventListener('click', shuffle);
+$('#liveArtBtn').addEventListener('click', setLiveArt);
 el.animateBtn.addEventListener('click', toggleAnimate);
 el.wallpaperBtn.addEventListener('click', setWallpaper);
 $('#exportBtn').addEventListener('click', exportPng);
@@ -451,10 +502,11 @@ function toast(msg, isError = false) {
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') return closeGallery();
-  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's' && currentView === 'create') {
     e.preventDefault();
     return exportPng();
   }
+  if (currentView !== 'create') return;
   if (e.metaKey || e.ctrlKey || e.altKey || e.target.matches('input[type=color]')) return;
   const k = e.key.toLowerCase();
   if (k === ' ') { e.preventDefault(); shuffle(); }
@@ -462,13 +514,17 @@ document.addEventListener('keydown', (e) => {
   else if (k === 'a') toggleAnimate();
   else if (k === 'f') toggleFav();
   else if (k === 'w') setWallpaper();
+  else if (k === 'l') setLiveArt();
   else if (k === 'g') (el.gallery.classList.contains('open') ? closeGallery : openGallery)();
   else if (/^[1-9]$/.test(k)) setStyle(STYLE_KEYS[Number(k) - 1]);
 });
 
 /* ───────── Boot ───────── */
 
-window.addEventListener('resize', layoutFrame);
+window.addEventListener('resize', () => {
+  layoutFrame();
+  movePill($('#viewsPill'), $('.view-tab.active'));
+});
 
 (async () => {
   if (bridge) {
@@ -476,5 +532,6 @@ window.addEventListener('resize', layoutFrame);
   }
   syncUI();
   layoutFrame();
+  movePill($('#viewsPill'), $('.view-tab.active'));
   requestAnimationFrame(frame);
 })();
