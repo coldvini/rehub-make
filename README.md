@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="build/icon.png" width="128" alt="Nocturne icon" />
+  <img src="build/icon.png" width="128" alt="Lumen icon" />
 </p>
 
-<h1 align="center">Nocturne</h1>
+<h1 align="center">Lumen</h1>
 
 <p align="center">
-  A beautiful, distraction-free focus timer for <b>macOS</b> and <b>Windows</b>.<br/>
-  Deep black, glowing, and calm.
+  Make stunning, one-of-a-kind wallpapers, then set them in one click.<br/>
+  For <b>macOS</b> and <b>Windows</b>.
 </p>
 
 <p align="center">
@@ -14,24 +14,41 @@
 </p>
 
 <p align="center">
-  <img src="docs/focus.png" alt="Nocturne focus mode" />
+  <img src="docs/flow.jpg" alt="Lumen generating a Flow wallpaper" />
 </p>
 
-## Features
+## What it does
 
-- **Glowing focus ring**: a gradient progress dial with tick marks, a live knob and a breathing glow while you work.
-- **Ambient aurora**: a slow, soft-moving background that shifts colour with each mode (violet for focus, teal for short breaks, amber for long breaks).
-- **Pomodoro cycles**: focus, short break and long break, with optional auto-start and a configurable long-break interval.
-- **Tasks**: add tasks, pick the one you're on, and Nocturne counts how many sessions each one took.
-- **Insights**: time focused today, sessions, day streak, all-time total and a 7-day chart.
-- **Gentle chime and desktop notifications** when a session ends, plus progress in the Windows taskbar and macOS dock.
-- **Keyboard-first**: `Space` start/pause · `R` reset · `S` skip · `1` `2` `3` switch mode · `N` new task · `,` settings.
-- Everything is stored locally on your machine. No accounts, no tracking.
+Hit **Space** and Lumen creates a brand-new piece of generative art that nobody else has. Pick a style and colours, tweak it until you love it, then press **Set as wallpaper**. Lumen renders it at your screen's full resolution and puts it on your desktop.
+
+- **6 styles:** Mesh gradients, glowing Waves, deep-space Nebula, silky Flow fields, neon Orbit rings and low-poly Prism.
+- **Live motion:** most styles animate gently in the preview, so you can catch the perfect frame.
+- **8 hand-tuned palettes**, a **Surprise me** button for random colour harmonies, and every colour is editable.
+- **Tweak sliders** for detail, glow, scale and film grain.
+- **One-click wallpaper** on macOS and Windows, plus **Export PNG** at native resolution (Retina and 4K included).
+- **Gallery:** heart the ones you love. Each saved piece is stored as a tiny recipe (style, seed and colours), so it re-renders perfectly at any size.
+- **Seeds:** every artwork has a seed like `#5B64E8`, so you can share or recreate it.
 
 <p align="center">
-  <img src="docs/break.png" width="49%" alt="Short break with insights" />
-  <img src="docs/settings.png" width="49%" alt="Settings" />
+  <img src="docs/waves.jpg" width="49%" alt="Waves style" />
+  <img src="docs/nebula.jpg" width="49%" alt="Nebula style" />
 </p>
+<p align="center">
+  <img src="docs/gallery.jpg" width="70%" alt="Gallery" />
+</p>
+
+### Keyboard shortcuts
+
+| Key | Action |
+| --- | --- |
+| `Space` | New artwork |
+| `C` | Surprise colours |
+| `1` – `6` | Switch style |
+| `A` | Pause / play motion |
+| `F` | Save to gallery |
+| `G` | Open gallery |
+| `W` | Set as wallpaper |
+| `Ctrl/⌘ S` | Export PNG |
 
 ## Download
 
@@ -39,15 +56,18 @@ Grab the files from the [**Releases**](../../releases/latest) page:
 
 | Platform | File |
 | --- | --- |
-| macOS (Apple Silicon and Intel) | `Nocturne-x.y.z-mac.dmg`: open it and drag Nocturne into Applications |
-| macOS (zip) | `Nocturne-x.y.z-mac.zip`: unzip to get `Nocturne.app` |
-| Windows installer | `Nocturne-Setup-x.y.z.exe` |
-| Windows portable | `Nocturne-x.y.z-portable.exe`: no install needed |
+| macOS (Apple Silicon and Intel) | `Lumen-x.y.z-mac.dmg`: open it and drag Lumen into Applications |
+| macOS (zip) | `Lumen-x.y.z-mac.zip`: unzip to get `Lumen.app` |
+| Windows installer | `Lumen-Setup-x.y.z.exe` |
+| Windows portable | `Lumen-x.y.z-portable.exe`: no install needed |
 
-**First launch on macOS:** the app isn't notarized by Apple, so right-click `Nocturne.app` → **Open** → **Open**.
-On macOS 15 or later, open **System Settings → Privacy & Security** and click **Open Anyway**.
+**First launch on macOS:** Lumen isn't notarized by Apple, so right-click `Lumen.app` → **Open** → **Open**.
+On macOS 15 or later, go to **System Settings → Privacy & Security** and click **Open Anyway**.
+The first time you set a wallpaper, macOS asks whether Lumen may control System Events. Click **OK**.
 
 **First launch on Windows:** if SmartScreen shows a warning, click **More info → Run anyway**.
+
+Wallpapers you set are also saved in `Pictures/Lumen`.
 
 ## Run from source
 
@@ -56,7 +76,7 @@ npm install
 npm start
 ```
 
-## Build installers yourself
+## Build it yourself
 
 ```bash
 npm run dist:mac   # on a Mac   → dist/*.dmg, dist/*.zip
@@ -65,12 +85,11 @@ npm run dist:win   # on Windows → dist/*.exe
 
 ## Automatic releases
 
-Every push to `main` triggers [`.github/workflows/release.yml`](.github/workflows/release.yml). It builds the macOS app on a Mac runner and the Windows `.exe` files on a Windows runner, then publishes them to a GitHub Release tagged with the version in `package.json`.
-To ship a new version, bump `"version"` in `package.json` and push.
+Every push to `main` runs [`.github/workflows/release.yml`](.github/workflows/release.yml). It builds the macOS app on a Mac runner and the Windows `.exe` files on a Windows runner, then publishes them to a GitHub Release tagged with the version in `package.json`.
 
 ## Tech
 
-[Electron](https://www.electronjs.org/) with plain HTML, CSS and JavaScript (no frameworks), packaged with [electron-builder](https://www.electron.build/).
+[Electron](https://www.electronjs.org/) with plain HTML, CSS and Canvas 2D (no frameworks), packaged with [electron-builder](https://www.electron.build/). All art is generated from code, with no image assets.
 
 ## License
 

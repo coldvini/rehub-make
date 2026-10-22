@@ -1,20 +1,23 @@
-## ☾ Nocturne — a beautiful focus timer
+## ✦ Lumen: make your own wallpapers
+
+Press Space to create one-of-a-kind generative art, tweak it, and set it as your desktop wallpaper in one click.
 
 | Platform | Download |
 | --- | --- |
-| **macOS** (Apple Silicon + Intel) | `Nocturne-<version>-mac.dmg` — open it and drag **Nocturne** into Applications |
-| **macOS** (zip) | `Nocturne-<version>-mac.zip` — unzip to get **Nocturne.app** |
-| **Windows** installer | `Nocturne-Setup-<version>.exe` |
-| **Windows** portable | `Nocturne-<version>-portable.exe` — no install, just run it |
+| **macOS** (Apple Silicon + Intel) | `Lumen-<version>-mac.dmg`: open it and drag **Lumen** into Applications |
+| **macOS** (zip) | `Lumen-<version>-mac.zip`: unzip to get **Lumen.app** |
+| **Windows** installer | `Lumen-Setup-<version>.exe` |
+| **Windows** portable | `Lumen-<version>-portable.exe`: no install, just run it |
 
 ### First launch
-- **macOS:** the app isn't notarized by Apple, so the first time, right-click **Nocturne.app → Open → Open**. On macOS 15+, go to **System Settings → Privacy & Security** and click **Open Anyway**.
+- **macOS:** the app isn't notarized by Apple, so the first time, right-click **Lumen.app → Open → Open**. On macOS 15+, go to **System Settings → Privacy & Security** and click **Open Anyway**. When you first set a wallpaper, allow Lumen to control **System Events**.
 - **Windows:** if SmartScreen appears, click **More info → Run anyway**.
 
 ### Features
-- Glowing animated focus ring with live ambient aurora background
-- Focus / short break / long break cycles with auto-start
-- Task list with per-task session counts
-- Insights: today, streak, all-time and a 7-day chart
-- Chime + desktop notifications, taskbar/dock progress
-- Keyboard shortcuts: `Space` `R` `S` `1` `2` `3` `N` `,`
+- 6 generative styles: Mesh, Waves, Nebula, Flow, Orbit, Prism
+- Live animated preview
+- 8 palettes, a random colour generator and editable colours
+- Detail, glow, scale and film-grain controls
+- One-click **Set as wallpaper** and full-resolution PNG export
+- Gallery of favourites that re-render at any size
+- Keyboard shortcuts: `Space` `C` `1–6` `A` `F` `G` `W` `⌘/Ctrl S`

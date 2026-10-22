@@ -44,7 +44,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: nocturne-${{ matrix.name }}
+          name: lumen-${{ matrix.name }}
           path: |
             dist/*.dmg
             dist/*.zip
@@ -67,11 +67,17 @@ jobs:
           path: release
           merge-multiple: true
 
+      - name: Replace any previous release of this version
+        run: gh release delete "v${{ steps.version.outputs.value }}" --cleanup-tag --yes || true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.value }}
           target_commitish: ${{ github.sha }}
-          name: Nocturne v${{ steps.version.outputs.value }}
+          name: Lumen v${{ steps.version.outputs.value }}
           body_path: .github/release-notes.md
           files: release/*
           make_latest: true

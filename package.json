@@ -1,8 +1,8 @@
 {
-  "name": "nocturne",
-  "productName": "Nocturne",
+  "name": "lumen",
+  "productName": "Lumen",
   "version": "1.0.0",
-  "description": "A beautiful, distraction-free focus timer for macOS and Windows.",
+  "description": "Generate stunning, one-of-a-kind wallpapers and set them in one click. For macOS and Windows.",
   "main": "main.js",
   "author": "Vishantuwuw",
   "license": "MIT",
@@ -17,8 +17,8 @@
     "electron-builder": "25.1.8"
   },
   "build": {
-    "appId": "com.vishantuwuw.nocturne",
-    "productName": "Nocturne",
+    "appId": "com.vishantuwuw.lumen",
+    "productName": "Lumen",
     "copyright": "Copyright © 2026 Vishantuwuw",
     "directories": {
       "output": "dist",
@@ -32,37 +32,68 @@
     ],
     "afterPack": "build/afterPack.js",
     "mac": {
-      "category": "public.app-category.productivity",
+      "category": "public.app-category.graphics-design",
       "icon": "build/icon.png",
       "identity": null,
       "target": [
-        { "target": "dmg", "arch": ["universal"] },
-        { "target": "zip", "arch": ["universal"] }
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "universal"
+          ]
+        }
       ],
-      "artifactName": "Nocturne-${version}-mac.${ext}"
+      "artifactName": "Lumen-${version}-mac.${ext}",
+      "extendInfo": {
+        "NSAppleEventsUsageDescription": "Lumen uses System Events to set your desktop wallpaper."
+      }
     },
     "dmg": {
-      "title": "Nocturne",
+      "title": "Lumen",
       "contents": [
-        { "x": 140, "y": 190 },
-        { "x": 400, "y": 190, "type": "link", "path": "/Applications" }
+        {
+          "x": 140,
+          "y": 190
+        },
+        {
+          "x": 400,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        }
       ]
     },
     "win": {
       "icon": "build/icon.png",
       "target": [
-        { "target": "nsis", "arch": ["x64"] },
-        { "target": "portable", "arch": ["x64"] }
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
       ]
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "artifactName": "Nocturne-Setup-${version}.exe"
+      "artifactName": "Lumen-Setup-${version}.exe"
     },
     "portable": {
-      "artifactName": "Nocturne-${version}-portable.exe"
+      "artifactName": "Lumen-${version}-portable.exe"
     }
   }
 }
